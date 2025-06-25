@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.app_name }}-blue"
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }} 
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }} 
+        version: blue
+    spec:
+      containers:
+        - name: {{ .Values.app_name }} 
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          resources:
+            limits:
+              cpu: {{ .Values.deployment.resources.limits.cpu | default "1000m" }}
+              memory: {{ .Values.deployment.resources.limits.memory | default "128Mi" }}
+            requests:
+              cpu: {{ .Values.deployment.resources.requests.cpu | default "500m" }}
+              memory: {{ .Values.deployment.resources.requests.memory | default "64Mi" }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.deployment.readinessProbe.path | default "/" }}
+              port: {{ .Values.deployment.readinessProbe.port | default 80 }}
+            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds | default 5 }}
+            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds | default 10 }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.deployment.livenessProbe.path | default "/" }}
+              port: {{ .Values.deployment.livenessProbe.port | default 80 }}
+            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds | default 15 }}
+            periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds | default 20 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.app_name }}-green"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }} 
+      version: green
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }} 
+        version: green
+    spec:
+      containers:
+        - name: {{ .Values.app_name }} 
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
+          resources:
+            limits:
+              cpu: {{ .Values.deployment.resources.limits.cpu | default "1000m" }}
+              memory: {{ .Values.deployment.resources.limits.memory | default "128Mi" }}
+            requests:
+              cpu: {{ .Values.deployment.resources.requests.cpu | default "500m" }}
+              memory: {{ .Values.deployment.resources.requests.memory | default "64Mi" }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.deployment.readinessProbe.path | default "/" }}
+              port: {{ .Values.deployment.readinessProbe.port | default 80 }}
+            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds | default 5 }}
+            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds | default 10 }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.deployment.livenessProbe.path | default "/" }}
+              port: {{ .Values.deployment.livenessProbe.port | default 80 }}
+            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds | default 15 }}
+            periodSeconds: {{  .Values.deployment.livenessProbe.periodSeconds | default 20 }}

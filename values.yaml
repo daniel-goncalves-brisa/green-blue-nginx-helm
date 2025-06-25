@@ -1,0 +1,30 @@
+app_name: nginx-bluegreen
+deployment:
+  image:
+    repository: nginx
+    tag: latest
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 128Mi
+    requests:
+      cpu: 500m
+      memory: 64Mi
+  readinessProbe:
+    path: /
+    port: 80
+    initialDelaySeconds: 5
+    periodSeconds: 10
+  livenessProbe:
+    path: /
+    port: 80
+    initialDelaySeconds: 15
+    periodSeconds: 20
+service:
+  port: 8080
+  targetPort: 80
+hpa:
+  minReplicas: 2
+  maxReplicas: 10
+  cpuUtilization: 60
+  memoryUtilization: 50

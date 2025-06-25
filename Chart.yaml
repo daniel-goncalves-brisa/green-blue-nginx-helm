@@ -1,0 +1,7 @@
+apiVersion: v2
+name: nginx-bluegreen
+namespace: blue-green-app
+description: Blue/Green deployment for NGINX using Helm
+type: application
+version: 1.0.0
+appVersion: "1.0"
